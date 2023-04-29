@@ -1,69 +1,22 @@
 #include "shell.h"
-
-
-/**
- * main - UNIX command line interpreter.
- * @ac: number of commandline arguments.
- * @av: array of commandline arguments.
- *
- * Return: 0 (success)
- */
-int main(__attribute__((unused)) int ac, char **av)
-{
-	int hist = 0;
-	char *prog = av[0];
-
-	if (!isatty(STDIN_FILENO))
-		_non_isatty(prog, &hist);
-
-	else if (ac != 1)
-		file_input(av, prog, &hist);
-
-	else
-		_isatty(prog, &hist);
-
-	return (0);
-}
-
-
-
+#include <stdlib.h>
 
 /**
- * prompt - prompts the shell.
+ * _getenv_value - Gets the value of an environment variable.
  *
- * Return: void
- */
-void prompt(void)
-{
-	write(STDOUT_FILENO, "chiElo$ ", 8);
-	fflush(stdout);
-}
-
-
-/**
- * signal_handler - reprompts the shell.
- * @signal: input signal
+ * @var_name: Name of the environment variable.
  *
- * Return: void
+ * Return: Value of the environment variable or NULL if the variable is not found.
  */
-void signal_handler(__attribute__((unused)) int signal)
+char *_getenv_value(const char *var_name)
 {
-	write(STDOUT_FILENO, "\n", 1);
-	prompt();
-}
+    size_t var_len = _strlen((char *)var_name);
+    char **env;
 
-
-/**
- * free_args - free args
- * @args: input
- *
- * Return: void
- */
-void free_args(char **args)
-{
-	int i = 0;
-
-	for (; args[i]; i++)
-		free(args[i]);
-	free(args);
+    for (env = environ; *env != NULL; env++)
+    {
+        if (_strncmp((char *)var_name, *env, var_len) == 0 && (*env)[var_len] == '=')
+            return (&(*env)[var_len + 1]);
+    }
+    return (NULL);
 }
