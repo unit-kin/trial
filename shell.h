@@ -1,39 +1,29 @@
-#ifndef _SHELL_
-#define _SHELL_
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef shellHead
+#define shellHead
+#define _GNU_SOURCE
+#include "string.h"
+#include "printf.h"
 #include <unistd.h>
-#include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <errno.h>
+char **split(char *s, char ch);
+char *_getenv(char *s, char **env);
+int is_file(char *s);
+int find_file(char **file, char *path);
 
-extern char **environ;
+void exit_shell(char **argv, char **argv_main, int stts);
 
-char *_strcat(char *dest, char *src);
-int _strlen(const char *s);
-int _strcmp(char *s1, char *s2);
-int _strncmp(const char *s1, const char *s2, size_t len);
-char *_strdup(char *str);
-int _atoi(char *s);
-int _putchar(char c);
-void _puts(char *str);
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
-int count_input(char *str);
-int count_delims(char *str, char *del);
-char *remove_new_line(char *str);
-void signal_handler(int sig_id);
-void _open_help(void);
-void _print_env(void);
-void _handle_exit(char **u_tokns, char *line);
-int execBuiltInCommands(char **u_tokns, char *line);
-void frees_get_env(char *env_path);
-void frees_tokens(char **tokns);
-int exec(char *cname, char **opts);
-char *_getenv(const char *name);
-char **tokenize(char *str, char *del, int len);
-char *find(char *cname);
+void display_prompt(int is_pipe);
+int get_input(char **ptr, size_t *sz, char **argv);
+void parse_input(char *s, char **cmd, char ***argv);
+void fill_command(char **ptrCmd, char *s, char *mnStr, char **ptrarg);
 
+void clean_strs(char *s1, char *s2, char *s3);
+void clean_args(char **argv);
+
+int push(char ***argv, char *s);
+void print_args(char **s);
 #endif
